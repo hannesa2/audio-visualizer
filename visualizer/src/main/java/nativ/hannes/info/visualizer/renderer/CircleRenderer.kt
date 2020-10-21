@@ -1,11 +1,11 @@
-package info.hannes.visualizer.renderer
+package nativ.hannes.info.visualizer.renderer
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import info.hannes.visualizer.data.AudioData
-import info.hannes.visualizer.data.FFTData
+import nativ.hannes.info.visualizer.data.AudioData
+import nativ.hannes.info.visualizer.data.FFTData
 import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.sin
@@ -25,16 +25,16 @@ class CircleRenderer constructor(private val paint: Paint, private val cycleColo
                     i.toFloat() / (data.bytes.size - 1),
                     rect.height() / 2 + (data.bytes[i] + 128).toByte() * (rect.height() / 2) / 128.toFloat())
             val polarPoint = toPolar(cartPoint, rect)
-            mPoints[i * 4] = polarPoint[0]
-            mPoints[i * 4 + 1] = polarPoint[1]
+            points[i * 4] = polarPoint[0]
+            points[i * 4 + 1] = polarPoint[1]
             val cartPoint2 = floatArrayOf(
                     (i + 1).toFloat() / (data.bytes.size - 1),
                     rect.height() / 2 + (data.bytes[i + 1] + 128).toByte() * (rect.height() / 2) / 128.toFloat())
             val polarPoint2 = toPolar(cartPoint2, rect)
-            mPoints[i * 4 + 2] = polarPoint2[0]
-            mPoints[i * 4 + 3] = polarPoint2[1]
+            points[i * 4 + 2] = polarPoint2[0]
+            points[i * 4 + 3] = polarPoint2[1]
         }
-        canvas.drawLines(mPoints, paint)
+        canvas.drawLines(points, paint)
 
         // Controls the pulsing rate
         modulation += 0.04f

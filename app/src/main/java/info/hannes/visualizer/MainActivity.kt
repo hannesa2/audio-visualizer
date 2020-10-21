@@ -13,10 +13,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import info.hannes.visualizer.renderer.BarGraphRenderer
-import info.hannes.visualizer.renderer.CircleBarRenderer
-import info.hannes.visualizer.renderer.CircleRenderer
-import info.hannes.visualizer.renderer.LineRenderer
+import nativ.hannes.info.visualizer.renderer.BarGraphRenderer
+import nativ.hannes.info.visualizer.renderer.CircleBarRenderer
+import nativ.hannes.info.visualizer.renderer.CircleRenderer
+import nativ.hannes.info.visualizer.renderer.LineRenderer
 import info.hannes.visualizer.utils.TunnelPlayerWorkaround
 import kotlinx.android.synthetic.main.main.*
 import java.io.IOException
@@ -25,8 +25,8 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     private var isAudioPermissionGranted = true
-    private var mPlayer: MediaPlayer? = null
-    private var mSilentPlayer /* to avoid tunnel player issue */: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private var silentPlayer /* to avoid tunnel player issue */: MediaPlayer? = null
 
     /** Called when the activity is first created.  */
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,25 +51,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        mPlayer = MediaPlayer.create(this, R.raw.test)
-        mPlayer?.isLooping = true
-        mPlayer?.start()
+        mediaPlayer = MediaPlayer.create(this, R.raw.test)
+        mediaPlayer?.isLooping = true
+        mediaPlayer?.start()
 
         // We need to link the visualizer view to the media player so that it displays something
-        visualizerView.link(mPlayer)
+        visualizerView.link(mediaPlayer)
 
         // Start with just line renderer
         addLineRenderer()
     }
 
     private fun cleanUp() {
-        if (mPlayer != null) {
+        if (mediaPlayer != null) {
             visualizerView.release()
-            mPlayer?.release()
-            mPlayer = null
+            mediaPlayer?.release()
+            mediaPlayer = null
         }
-        mSilentPlayer?.release()
-        mSilentPlayer = null
+        silentPlayer?.release()
+        silentPlayer = null
     }
 
     // NOTE:
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         // Read "tunnel.decode" system property to determine
         // the workaround is needed
         if (TunnelPlayerWorkaround.isTunnelDecodeEnabled(this)) {
-            mSilentPlayer = TunnelPlayerWorkaround.createSilentMediaPlayer(this)
+            silentPlayer = TunnelPlayerWorkaround.createSilentMediaPlayer(this)
         }
     }
 
@@ -136,15 +136,15 @@ class MainActivity : AppCompatActivity() {
     // Actions for buttons defined in xml
     @Throws(IllegalStateException::class, IOException::class)
     fun startPressed(view: View?) {
-        if (mPlayer!!.isPlaying) {
+        if (mediaPlayer!!.isPlaying) {
             return
         }
-        mPlayer!!.prepare()
-        mPlayer!!.start()
+        mediaPlayer!!.prepare()
+        mediaPlayer!!.start()
     }
 
     fun stopPressed(view: View?) {
-        mPlayer!!.stop()
+        mediaPlayer!!.stop()
     }
 
     fun barPressed(view: View?) {
@@ -197,7 +197,6 @@ class MainActivity : AppCompatActivity() {
             init()
         } else {
             Toast.makeText(this, getString(R.string.permission_denied_audio_toast), Toast.LENGTH_LONG).show()
-//            finish()
         }
     }
 

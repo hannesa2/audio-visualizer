@@ -1,4 +1,4 @@
-package info.hannes.visualizer
+package nativ.hannes.info.visualizer
 
 import android.content.Context
 import android.graphics.*
@@ -8,9 +8,9 @@ import android.media.audiofx.Visualizer
 import android.media.audiofx.Visualizer.OnDataCaptureListener
 import android.util.AttributeSet
 import android.view.View
-import info.hannes.visualizer.data.AudioData
-import info.hannes.visualizer.data.FFTData
-import info.hannes.visualizer.renderer.Renderer
+import nativ.hannes.info.visualizer.data.AudioData
+import nativ.hannes.info.visualizer.data.FFTData
+import nativ.hannes.info.visualizer.renderer.Renderer
 import java.util.*
 
 /**
@@ -19,24 +19,24 @@ import java.util.*
  * [Visualizer.OnDataCaptureListener.onFftDataCapture]
  */
 class VisualizerView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) : View(context, attrs) {
-    private var mBytes: ByteArray?
-    private var mFFTBytes: ByteArray?
+    private var bytes: ByteArray?
+    private var fftBytes: ByteArray?
     private val mRect = Rect()
-    private var mVisualizer: Visualizer? = null
-    private var audioData : AudioData? = null
-    private var fftData : FFTData? = null
+    private var visualizer: Visualizer? = null
+    private var audioData: AudioData? = null
+    private var fftData: FFTData? = null
     private val localMatrix = Matrix()
-    private var mRenderers: MutableSet<Renderer>? = null
-    private val mFlashPaint = Paint()
-    private val mFadePaint = Paint()
+    private var renderers: MutableSet<Renderer>? = null
+    private val flashPaint = Paint()
+    private val fadePaint = Paint()
 
     init {
-        mBytes = null
-        mFFTBytes = null
-        mFlashPaint.color = Color.argb(122, 255, 255, 255)
-        mFadePaint.color = Color.argb(238, 255, 255, 255) // Adjust alpha to change how quickly the image fades
-        mFadePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
-        mRenderers = HashSet()
+        bytes = null
+        fftBytes = null
+        flashPaint.color = Color.argb(122, 255, 255, 255)
+        fadePaint.color = Color.argb(238, 255, 255, 255) // Adjust alpha to change how quickly the image fades
+        fadePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
+        renderers = HashSet()
     }
 
     /**
@@ -50,32 +50,32 @@ class VisualizerView @JvmOverloads constructor(context: Context?, attrs: Attribu
         }
 
         // Create the Visualizer object and attach it to our media player.
-        mVisualizer = Visualizer(player.audioSessionId)
-        mVisualizer!!.captureSize = Visualizer.getCaptureSizeRange()[1]
+        visualizer = Visualizer(player.audioSessionId)
+        visualizer!!.captureSize = Visualizer.getCaptureSizeRange()[1]
 
         // Pass through Visualizer data to VisualizerView
         val captureListener: OnDataCaptureListener = object : OnDataCaptureListener {
-            override fun onWaveFormDataCapture(visualizer: Visualizer, bytes: ByteArray, samplingRate: Int) {
-                updateVisualizer(bytes)
+            override fun onWaveFormDataCapture(updateVisualizer: Visualizer, updateBytes: ByteArray, samplingRate: Int) {
+                updateVisualizer(updateBytes)
             }
 
-            override fun onFftDataCapture(visualizer: Visualizer, bytes: ByteArray, samplingRate: Int) {
-                updateVisualizerFFT(bytes)
+            override fun onFftDataCapture(updateVisualizer: Visualizer, updateBytes: ByteArray, samplingRate: Int) {
+                updateVisualizerFFT(updateBytes)
             }
         }
-        mVisualizer!!.setDataCaptureListener(captureListener, Visualizer.getMaxCaptureRate() / 2, true, true)
+        visualizer!!.setDataCaptureListener(captureListener, Visualizer.getMaxCaptureRate() / 2, true, true)
 
         // Enabled Visualizer and disable when we're done with the stream
-        mVisualizer!!.enabled = true
-        player.setOnCompletionListener(OnCompletionListener { mediaPlayer: MediaPlayer? -> mVisualizer!!.enabled = false })
+        visualizer!!.enabled = true
+        player.setOnCompletionListener(OnCompletionListener { mediaPlayer: MediaPlayer? -> visualizer!!.enabled = false })
     }
 
     fun addRenderer(renderer: Renderer) {
-            mRenderers!!.add(renderer)
+        renderers!!.add(renderer)
     }
 
     fun clearRenderers() {
-        mRenderers!!.clear()
+        renderers!!.clear()
     }
 
     /**
@@ -83,7 +83,7 @@ class VisualizerView @JvmOverloads constructor(context: Context?, attrs: Attribu
      * MediaPlayer it is good practice to call this method
      */
     fun release() {
-        mVisualizer!!.release()
+        visualizer!!.release()
     }
 
     /**
@@ -91,9 +91,9 @@ class VisualizerView @JvmOverloads constructor(context: Context?, attrs: Attribu
      * Android Visualizer.OnDataCaptureListener call back. See
      * [Visualizer.OnDataCaptureListener.onWaveFormDataCapture]
      */
-    fun updateVisualizer(bytes: ByteArray?) {
-        mBytes = bytes
-        audioData = AudioData(mBytes!!)
+    fun updateVisualizer(updateBytes: ByteArray?) {
+        bytes = updateBytes
+        audioData = AudioData(bytes!!)
 
         invalidate()
     }
@@ -103,10 +103,10 @@ class VisualizerView @JvmOverloads constructor(context: Context?, attrs: Attribu
      * Android Visualizer.OnDataCaptureListener call back. See
      * [Visualizer.OnDataCaptureListener.onFftDataCapture]
      */
-    fun updateVisualizerFFT(bytes: ByteArray?) {
-        mFFTBytes = bytes
+    fun updateVisualizerFFT(updateBytes: ByteArray?) {
+        fftBytes = updateBytes
 
-        fftData = FFTData(mFFTBytes!!)
+        fftData = FFTData(fftBytes!!)
 
         invalidate()
     }
@@ -136,27 +136,27 @@ class VisualizerView @JvmOverloads constructor(context: Context?, attrs: Attribu
             mCanvas = Canvas(mCanvasBitmap!!)
         }
 
-        mBytes?.let {
+        bytes?.let {
             // Render all audio renderers
             audioData?.bytes = it
-            for (renderer in mRenderers!!) {
+            for (renderer in renderers!!) {
                 renderer.render(mCanvas!!, audioData!!, mRect)
             }
         }
 
-        mFFTBytes?.let {
+        fftBytes?.let {
             // Render all FFT renderers
             fftData?.bytes = it
-            for (renderer in mRenderers!!) {
+            for (renderer in renderers!!) {
                 renderer.render(mCanvas!!, fftData!!, mRect)
             }
         }
 
         // Fade out old contents
-        mCanvas!!.drawPaint(mFadePaint)
+        mCanvas!!.drawPaint(fadePaint)
         if (mFlash) {
             mFlash = false
-            mCanvas!!.drawPaint(mFlashPaint)
+            mCanvas!!.drawPaint(flashPaint)
         }
         canvas.drawBitmap(mCanvasBitmap!!, localMatrix, null)
     }

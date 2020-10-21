@@ -1,11 +1,11 @@
-package info.hannes.visualizer.renderer
+package nativ.hannes.info.visualizer.renderer
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import info.hannes.visualizer.data.AudioData
-import info.hannes.visualizer.data.FFTData
+import nativ.hannes.info.visualizer.data.AudioData
+import nativ.hannes.info.visualizer.data.FFTData
 import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.log10
@@ -36,17 +36,17 @@ class CircleBarRenderer constructor(private val paint: Paint, private val divisi
                     rect.height() / 2 - dbValue / 4
             )
             val polarPoint = toPolar(cartPoint, rect)
-            mFFTPoints[i * 4] = polarPoint[0]
-            mFFTPoints[i * 4 + 1] = polarPoint[1]
+            fftPoints[i * 4] = polarPoint[0]
+            fftPoints[i * 4 + 1] = polarPoint[1]
             val cartPoint2 = floatArrayOf(
                     (i * divisions).toFloat() / (data.bytes.size - 1),
                     rect.height() / 2 + dbValue
             )
             val polarPoint2 = toPolar(cartPoint2, rect)
-            mFFTPoints[i * 4 + 2] = polarPoint2[0]
-            mFFTPoints[i * 4 + 3] = polarPoint2[1]
+            fftPoints[i * 4 + 2] = polarPoint2[0]
+            fftPoints[i * 4 + 3] = polarPoint2[1]
         }
-        canvas.drawLines(mFFTPoints, paint)
+        canvas.drawLines(fftPoints, paint)
 
         // Controls the pulsing rate
         modulation += 0.13f

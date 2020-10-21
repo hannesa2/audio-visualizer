@@ -1,22 +1,16 @@
-package info.hannes.visualizer.renderer;
+package info.hannes.visualizer.renderer
 
-import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.Canvas
+import android.graphics.Rect
+import info.hannes.visualizer.data.AudioData
+import info.hannes.visualizer.data.FFTData
 
-import info.hannes.visualizer.data.AudioData;
-import info.hannes.visualizer.data.FFTData;
-
-abstract public class Renderer {
+abstract class Renderer {
     // Have these as members, so we don't have to re-create them each time
-    protected float[] mPoints;
-    protected float[] mFFTPoints;
-
-    public Renderer() {
-    }
-
+    protected var mPoints: FloatArray = FloatArray(0)
+    protected var mFFTPoints: FloatArray = FloatArray(0)
     // As the display of raw/FFT audio will usually look different, subclasses
     // will typically only implement one of the below methods
-
     /**
      * Implement this method to render the audio data onto the canvas
      *
@@ -24,7 +18,7 @@ abstract public class Renderer {
      * @param data   - Data to render
      * @param rect   - Rect to render into
      */
-    abstract public void onRender(Canvas canvas, AudioData data, Rect rect);
+    abstract fun onRender(canvas: Canvas, data: AudioData, rect: Rect)
 
     /**
      * Implement this method to render the FFT audio data onto the canvas
@@ -33,11 +27,8 @@ abstract public class Renderer {
      * @param data   - Data to render
      * @param rect   - Rect to render into
      */
-    abstract public void onRender(Canvas canvas, FFTData data, Rect rect);
-
-
+    abstract fun onRender(canvas: Canvas, data: FFTData, rect: Rect)
     // These methods should actually be called for rendering
-
     /**
      * Render the audio data onto the canvas
      *
@@ -45,12 +36,11 @@ abstract public class Renderer {
      * @param data   - Data to render
      * @param rect   - Rect to render into
      */
-    final public void render(Canvas canvas, AudioData data, Rect rect) {
-        if (mPoints == null || mPoints.length < data.bytes.length * 4) {
-            mPoints = new float[data.bytes.length * 4];
+    fun render(canvas: Canvas, data: AudioData, rect: Rect) {
+        if (mPoints.size < data.bytes.size * 4) {
+            mPoints = FloatArray(data.bytes.size * 4)
         }
-
-        onRender(canvas, data, rect);
+        onRender(canvas, data, rect)
     }
 
     /**
@@ -60,11 +50,10 @@ abstract public class Renderer {
      * @param data   - Data to render
      * @param rect   - Rect to render into
      */
-    final public void render(Canvas canvas, FFTData data, Rect rect) {
-        if (mFFTPoints == null || mFFTPoints.length < data.bytes.length * 4) {
-            mFFTPoints = new float[data.bytes.length * 4];
+    fun render(canvas: Canvas, data: FFTData, rect: Rect) {
+        if (mFFTPoints.size < data.bytes.size * 4) {
+            mFFTPoints = FloatArray(data.bytes.size * 4)
         }
-
-        onRender(canvas, data, rect);
+        onRender(canvas, data, rect)
     }
 }

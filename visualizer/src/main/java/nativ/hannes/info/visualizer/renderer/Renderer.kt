@@ -1,14 +1,14 @@
-package info.hannes.visualizer.renderer
+package nativ.hannes.info.visualizer.renderer
 
 import android.graphics.Canvas
 import android.graphics.Rect
-import info.hannes.visualizer.data.AudioData
-import info.hannes.visualizer.data.FFTData
+import nativ.hannes.info.visualizer.data.AudioData
+import nativ.hannes.info.visualizer.data.FFTData
 
 abstract class Renderer {
     // Have these as members, so we don't have to re-create them each time
-    protected var mPoints: FloatArray = FloatArray(0)
-    protected var mFFTPoints: FloatArray = FloatArray(0)
+    protected var points: FloatArray = FloatArray(0)
+    protected var fftPoints: FloatArray = FloatArray(0)
     // As the display of raw/FFT audio will usually look different, subclasses
     // will typically only implement one of the below methods
     /**
@@ -37,8 +37,8 @@ abstract class Renderer {
      * @param rect   - Rect to render into
      */
     fun render(canvas: Canvas, data: AudioData, rect: Rect) {
-        if (mPoints.size < data.bytes.size * 4) {
-            mPoints = FloatArray(data.bytes.size * 4)
+        if (points.size < data.bytes.size * 4) {
+            points = FloatArray(data.bytes.size * 4)
         }
         onRender(canvas, data, rect)
     }
@@ -51,8 +51,8 @@ abstract class Renderer {
      * @param rect   - Rect to render into
      */
     fun render(canvas: Canvas, data: FFTData, rect: Rect) {
-        if (mFFTPoints.size < data.bytes.size * 4) {
-            mFFTPoints = FloatArray(data.bytes.size * 4)
+        if (fftPoints.size < data.bytes.size * 4) {
+            fftPoints = FloatArray(data.bytes.size * 4)
         }
         onRender(canvas, data, rect)
     }

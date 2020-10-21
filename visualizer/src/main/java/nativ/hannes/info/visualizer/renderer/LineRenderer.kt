@@ -1,11 +1,11 @@
-package info.hannes.visualizer.renderer
+package nativ.hannes.info.visualizer.renderer
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import info.hannes.visualizer.data.AudioData
-import info.hannes.visualizer.data.FFTData
+import nativ.hannes.info.visualizer.data.AudioData
+import nativ.hannes.info.visualizer.data.FFTData
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.sin
@@ -27,10 +27,10 @@ class LineRenderer constructor(private val paint: Paint, private val flashPaint:
 
         // Calculate points for line
         for (i in 0 until data.bytes.size - 1) {
-            mPoints[i * 4] = (rect.width() * i / (data.bytes.size - 1)).toFloat()
-            mPoints[i * 4 + 1] = (rect.height() / 2 + (data.bytes[i] + 128).toByte() * (rect.height() / 3) / 128).toFloat()
-            mPoints[i * 4 + 2] = (rect.width() * (i + 1) / (data.bytes.size - 1)).toFloat()
-            mPoints[i * 4 + 3] = (rect.height() / 2 + (data.bytes[i + 1] + 128).toByte() * (rect.height() / 3) / 128).toFloat()
+            points[i * 4] = (rect.width() * i / (data.bytes.size - 1)).toFloat()
+            points[i * 4 + 1] = (rect.height() / 2 + (data.bytes[i] + 128).toByte() * (rect.height() / 3) / 128).toFloat()
+            points[i * 4 + 2] = (rect.width() * (i + 1) / (data.bytes.size - 1)).toFloat()
+            points[i * 4 + 3] = (rect.height() / 2 + (data.bytes[i + 1] + 128).toByte() * (rect.height() / 3) / 128).toFloat()
         }
 
         // Calc amplitude for this waveform
@@ -42,11 +42,11 @@ class LineRenderer constructor(private val paint: Paint, private val flashPaint:
         if (amp > amplitude) {
             // Amplitude is bigger than normal, make a prominent line
             amplitude = amp
-            canvas.drawLines(mPoints, flashPaint)
+            canvas.drawLines(points, flashPaint)
         } else {
             // Amplitude is nothing special, reduce the amplitude
             amplitude *= 0.99f
-            canvas.drawLines(mPoints, paint)
+            canvas.drawLines(points, paint)
         }
     }
 

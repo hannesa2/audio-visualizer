@@ -1,10 +1,10 @@
-package info.hannes.visualizer.renderer
+package nativ.hannes.info.visualizer.renderer
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import info.hannes.visualizer.data.AudioData
-import info.hannes.visualizer.data.FFTData
+import nativ.hannes.info.visualizer.data.AudioData
+import nativ.hannes.info.visualizer.data.FFTData
 import kotlin.math.log10
 
 /**
@@ -21,20 +21,20 @@ class BarGraphRenderer(private val divisions: Int, private val paint: Paint, pri
 
     override fun onRender(canvas: Canvas, data: FFTData, rect: Rect) {
         for (i in 0 until data.bytes.size / divisions) {
-            mFFTPoints[i * 4] = (i * 4 * divisions).toFloat()
-            mFFTPoints[i * 4 + 2] = (i * 4 * divisions).toFloat()
+            fftPoints[i * 4] = (i * 4 * divisions).toFloat()
+            fftPoints[i * 4 + 2] = (i * 4 * divisions).toFloat()
             val rfk = data.bytes[divisions * i]
             val ifk = data.bytes[divisions * i + 1]
             val magnitude = (rfk * rfk + ifk * ifk).toFloat()
             val dbValue = (10 * log10(magnitude.toDouble())).toInt()
             if (top) {
-                mFFTPoints[i * 4 + 1] = 0F
-                mFFTPoints[i * 4 + 3] = (dbValue * 2 - 10).toFloat()
+                fftPoints[i * 4 + 1] = 0F
+                fftPoints[i * 4 + 3] = (dbValue * 2 - 10).toFloat()
             } else {
-                mFFTPoints[i * 4 + 1] = rect.height().toFloat()
-                mFFTPoints[i * 4 + 3] = (rect.height() - (dbValue * 2 - 10)).toFloat()
+                fftPoints[i * 4 + 1] = rect.height().toFloat()
+                fftPoints[i * 4 + 3] = (rect.height() - (dbValue * 2 - 10)).toFloat()
             }
         }
-        canvas.drawLines(mFFTPoints, paint)
+        canvas.drawLines(fftPoints, paint)
     }
 }

@@ -19,22 +19,12 @@ android {
         sourceCompatibility 1.8
     }
 
-    signingConfigs {
-        debug {
-            storePassword "android"
-            keyPassword "android"
-            keyAlias "androiddebugkey"
-        }
-    }
-
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
             applicationIdSuffix ".debug"
             versionNameSuffix ".debug"
         }
         release {
-            signingConfig signingConfigs.debug
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

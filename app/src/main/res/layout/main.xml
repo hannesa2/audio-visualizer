@@ -3,26 +3,25 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:background="#000" >
+        android:background="#000">
 
         <info.hannes.visualizer.VisualizerView
             android:id="@+id/visualizerView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-        </info.hannes.visualizer.VisualizerView>
+            android:layout_height="fill_parent" />
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0" >
+        android:layout_weight="0">
 
         <Button
             android:layout_width="0dp"
@@ -30,8 +29,7 @@
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:onClick="barPressed"
-            android:text="Bar" >
-        </Button>
+            android:text="Bar" />
 
         <Button
             android:layout_width="0dp"
@@ -39,8 +37,7 @@
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:onClick="circlePressed"
-            android:text="Circle" >
-        </Button>
+            android:text="Circle" />
 
         <Button
             android:layout_width="0dp"
@@ -48,17 +45,15 @@
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:onClick="circleBarPressed"
-            android:text="Circle Bar" >
-        </Button>
-            
+            android:text="Circle Bar" />
+
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:onClick="linePressed"
-            android:text="Line" >
-        </Button>
+            android:text="Line" />
 
         <Button
             android:layout_width="0dp"
@@ -66,14 +61,13 @@
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:onClick="clearPressed"
-            android:text="Clear" >
-        </Button>
+            android:text="Clear" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0" >
+        android:layout_weight="0">
 
         <Button
             android:layout_width="0dp"
@@ -81,8 +75,7 @@
             android:layout_margin="10dp"
             android:layout_weight="0.5"
             android:onClick="startPressed"
-            android:text="Start" >
-        </Button>
+            android:text="Start" />
 
         <Button
             android:layout_width="0dp"
@@ -90,8 +83,7 @@
             android:layout_margin="10dp"
             android:layout_weight="0.5"
             android:onClick="stopPressed"
-            android:text="Stop" >
-        </Button>
+            android:text="Stop" />
     </LinearLayout>
 
 </LinearLayout>

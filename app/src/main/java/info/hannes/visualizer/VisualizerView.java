@@ -28,17 +28,19 @@ import info.hannes.visualizer.renderer.Renderer;
  * {@link Visualizer.OnDataCaptureListener#onFftDataCapture }
  */
 public class VisualizerView extends View {
-    private static final String TAG = "VisualizerView";
 
     private byte[] mBytes;
     private byte[] mFFTBytes;
-    private Rect mRect = new Rect();
+    private final Rect mRect = new Rect();
     private Visualizer mVisualizer;
+    private final AudioData audioData = new AudioData(mBytes);
+    private final FFTData fftData = new FFTData(mFFTBytes);
+    private final Matrix matrix = new Matrix();
 
     private Set<Renderer> mRenderers;
 
-    private Paint mFlashPaint = new Paint();
-    private Paint mFadePaint = new Paint();
+    private final Paint mFlashPaint = new Paint();
+    private final Paint mFadePaint = new Paint();
 
     public VisualizerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
@@ -61,7 +63,7 @@ public class VisualizerView extends View {
         mFadePaint.setColor(Color.argb(238, 255, 255, 255)); // Adjust alpha to change how quickly the image fades
         mFadePaint.setXfermode(new PorterDuffXfermode(Mode.MULTIPLY));
 
-        mRenderers = new HashSet<Renderer>();
+        mRenderers = new HashSet<>();
     }
 
     /**
@@ -81,29 +83,21 @@ public class VisualizerView extends View {
         // Pass through Visualizer data to VisualizerView
         Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener() {
             @Override
-            public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
-                                              int samplingRate) {
+            public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
                 updateVisualizer(bytes);
             }
 
             @Override
-            public void onFftDataCapture(Visualizer visualizer, byte[] bytes,
-                                         int samplingRate) {
+            public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
                 updateVisualizerFFT(bytes);
             }
         };
 
-        mVisualizer.setDataCaptureListener(captureListener,
-                Visualizer.getMaxCaptureRate() / 2, true, true);
+        mVisualizer.setDataCaptureListener(captureListener, Visualizer.getMaxCaptureRate() / 2, true, true);
 
         // Enabled Visualizer and disable when we're done with the stream
         mVisualizer.setEnabled(true);
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mVisualizer.setEnabled(false);
-            }
-        });
+        player.setOnCompletionListener(mediaPlayer -> mVisualizer.setEnabled(false));
     }
 
     public void addRenderer(Renderer renderer) {
@@ -128,8 +122,6 @@ public class VisualizerView extends View {
      * Pass data to the visualizer. Typically this will be obtained from the
      * Android Visualizer.OnDataCaptureListener call back. See
      * {@link Visualizer.OnDataCaptureListener#onWaveFormDataCapture }
-     *
-     * @param bytes
      */
     public void updateVisualizer(byte[] bytes) {
         mBytes = bytes;
@@ -140,8 +132,6 @@ public class VisualizerView extends View {
      * Pass FFT data to the visualizer. Typically this will be obtained from the
      * Android Visualizer.OnDataCaptureListener call back. See
      * {@link Visualizer.OnDataCaptureListener#onFftDataCapture }
-     *
-     * @param bytes
      */
     public void updateVisualizerFFT(byte[] bytes) {
         mFFTBytes = bytes;
@@ -171,7 +161,7 @@ public class VisualizerView extends View {
         mRect.set(0, 0, getWidth(), getHeight());
 
         if (mCanvasBitmap == null) {
-            mCanvasBitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Config.ARGB_8888);
+            mCanvasBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
         }
         if (mCanvas == null) {
             mCanvas = new Canvas(mCanvasBitmap);
@@ -179,17 +169,17 @@ public class VisualizerView extends View {
 
         if (mBytes != null) {
             // Render all audio renderers
-            AudioData audioData = new AudioData(mBytes);
-            for (Renderer r : mRenderers) {
-                r.render(mCanvas, audioData, mRect);
+            audioData.bytes = mBytes;
+            for (Renderer renderer : mRenderers) {
+                renderer.render(mCanvas, audioData, mRect);
             }
         }
 
         if (mFFTBytes != null) {
             // Render all FFT renderers
-            FFTData fftData = new FFTData(mFFTBytes);
-            for (Renderer r : mRenderers) {
-                r.render(mCanvas, fftData, mRect);
+            fftData.bytes = mFFTBytes;
+            for (Renderer renderer : mRenderers) {
+                renderer.render(mCanvas, fftData, mRect);
             }
         }
 
@@ -201,6 +191,6 @@ public class VisualizerView extends View {
             mCanvas.drawPaint(mFlashPaint);
         }
 
-        canvas.drawBitmap(mCanvasBitmap, new Matrix(), null);
+        canvas.drawBitmap(mCanvasBitmap, matrix, null);
     }
 }

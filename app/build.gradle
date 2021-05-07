@@ -14,11 +14,6 @@ android {
         versionName "1.0"
     }
 
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
-
     buildTypes {
         debug {
             applicationIdSuffix ".debug"

@@ -24,43 +24,43 @@
         android:layout_weight="0">
 
         <Button
+            android:id="@+id/buttonBarPressed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="0.2"
-            android:onClick="barPressed"
             android:text="Bar" />
 
         <Button
+            android:id="@+id/buttonCirclePressed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="0.2"
-            android:onClick="circlePressed"
             android:text="Circle" />
 
         <Button
+            android:id="@+id/buttonCircleBarPressed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="0.2"
-            android:onClick="circleBarPressed"
             android:text="Circle Bar" />
 
         <Button
+            android:id="@+id/buttonLinePressed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="0.2"
-            android:onClick="linePressed"
             android:text="Line" />
 
         <Button
+            android:id="@+id/buttonClearPressed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="0.2"
-            android:onClick="clearPressed"
             android:text="Clear" />
     </LinearLayout>
 
@@ -70,19 +70,19 @@
         android:layout_weight="0">
 
         <Button
+            android:id="@+id/buttonStartPressed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="0.5"
-            android:onClick="startPressed"
             android:text="Start" />
 
         <Button
+            android:id="@+id/buttonStopPressed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="0.5"
-            android:onClick="stopPressed"
             android:text="Stop" />
     </LinearLayout>
 

@@ -8,31 +8,47 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import info.hannes.visualizer.databinding.MainBinding
 import nativ.hannes.info.visualizer.renderer.BarGraphRenderer
 import nativ.hannes.info.visualizer.renderer.CircleBarRenderer
 import nativ.hannes.info.visualizer.renderer.CircleRenderer
 import nativ.hannes.info.visualizer.renderer.LineRenderer
 import info.hannes.visualizer.utils.TunnelPlayerWorkaround
-import kotlinx.android.synthetic.main.main.*
-import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: MainBinding
 
     private var isAudioPermissionGranted = true
     private var mediaPlayer: MediaPlayer? = null
     private var silentPlayer /* to avoid tunnel player issue */: MediaPlayer? = null
 
-    /** Called when the activity is first created.  */
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main)
+        binding = MainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
         checkCameraPermissions()
+
+        binding.buttonBarPressed.setOnClickListener { addBarGraphRenderers() }
+        binding.buttonCirclePressed.setOnClickListener { addCircleRenderer() }
+        binding.buttonCircleBarPressed.setOnClickListener { addCircleBarRenderer() }
+        binding.buttonLinePressed.setOnClickListener { addLineRenderer() }
+        binding.buttonClearPressed.setOnClickListener { binding.visualizerView.clearRenderers() }
+
+        binding.buttonStopPressed.setOnClickListener { mediaPlayer?.stop() }
+        binding.buttonStartPressed.setOnClickListener {
+            if (mediaPlayer?.isPlaying == false) {
+                mediaPlayer?.prepare()
+                mediaPlayer?.start()
+            }
+        }
     }
 
     override fun onResume() {
@@ -56,16 +72,16 @@ class MainActivity : AppCompatActivity() {
         mediaPlayer?.start()
 
         // We need to link the visualizer view to the media player so that it displays something
-        visualizerView.link(mediaPlayer)
+        binding.visualizerView.link(mediaPlayer)
 
         // Start with just line renderer
         addLineRenderer()
     }
 
     private fun cleanUp() {
-        if (mediaPlayer != null) {
-            visualizerView.release()
-            mediaPlayer?.release()
+        mediaPlayer?.let {
+            binding.visualizerView.release()
+            it.release()
             mediaPlayer = null
         }
         silentPlayer?.release()
@@ -92,13 +108,13 @@ class MainActivity : AppCompatActivity() {
         paint.isAntiAlias = true
         paint.color = Color.argb(200, 56, 138, 252)
         val barGraphRendererBottom = BarGraphRenderer(16, paint, false)
-        visualizerView.addRenderer(barGraphRendererBottom)
+        binding.visualizerView.addRenderer(barGraphRendererBottom)
         val paint2 = Paint()
         paint2.strokeWidth = 12f
         paint2.isAntiAlias = true
         paint2.color = Color.argb(200, 181, 111, 233)
         val barGraphRendererTop = BarGraphRenderer(4, paint2, true)
-        visualizerView.addRenderer(barGraphRendererTop)
+        binding.visualizerView.addRenderer(barGraphRendererTop)
     }
 
     private fun addCircleBarRenderer() {
@@ -108,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.LIGHTEN)
         paint.color = Color.argb(255, 222, 92, 143)
         val circleBarRenderer = CircleBarRenderer(paint, 32, true)
-        visualizerView.addRenderer(circleBarRenderer)
+        binding.visualizerView.addRenderer(circleBarRenderer)
     }
 
     private fun addCircleRenderer() {
@@ -117,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         paint.isAntiAlias = true
         paint.color = Color.argb(255, 222, 92, 143)
         val circleRenderer = CircleRenderer(paint, true)
-        visualizerView.addRenderer(circleRenderer)
+        binding.visualizerView.addRenderer(circleRenderer)
     }
 
     private fun addLineRenderer() {
@@ -130,41 +146,7 @@ class MainActivity : AppCompatActivity() {
         lineFlashPaint.isAntiAlias = true
         lineFlashPaint.color = Color.argb(188, 255, 255, 255)
         val lineRenderer = LineRenderer(linePaint, lineFlashPaint, true)
-        visualizerView.addRenderer(lineRenderer)
-    }
-
-    // Actions for buttons defined in xml
-    @Throws(IllegalStateException::class, IOException::class)
-    fun startPressed(view: View?) {
-        if (mediaPlayer!!.isPlaying) {
-            return
-        }
-        mediaPlayer!!.prepare()
-        mediaPlayer!!.start()
-    }
-
-    fun stopPressed(view: View?) {
-        mediaPlayer!!.stop()
-    }
-
-    fun barPressed(view: View?) {
-        addBarGraphRenderers()
-    }
-
-    fun circlePressed(view: View?) {
-        addCircleRenderer()
-    }
-
-    fun circleBarPressed(view: View?) {
-        addCircleBarRenderer()
-    }
-
-    fun linePressed(view: View?) {
-        addLineRenderer()
-    }
-
-    fun clearPressed(view: View?) {
-        visualizerView.clearRenderers()
+        binding.visualizerView.addRenderer(lineRenderer)
     }
 
     private fun checkCameraPermissions() {

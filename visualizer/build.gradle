@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
 
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -25,6 +23,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'nativ.hannes.info.visualizer'
 }
 
 dependencies {

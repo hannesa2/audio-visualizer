@@ -29,11 +29,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    lintOptions {
+    lint {
         abortOnError true
         ignoreWarnings false
     }
+    namespace 'info.hannes.visualizer'
+
 }
 
 dependencies {

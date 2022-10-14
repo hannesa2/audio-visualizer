@@ -34,6 +34,8 @@ android {
         abortOnError true
         ignoreWarnings false
     }
+    namespace 'info.hannes.visualizer'
+
 }
 
 dependencies {

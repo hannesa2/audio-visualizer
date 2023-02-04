@@ -43,7 +43,7 @@ object TunnelPlayerWorkaround {
             if (!result && mp != null) {
                 try {
                     mp.release()
-                } catch (e: IllegalStateException) {
+                } catch (_: IllegalStateException) {
                 }
             }
         }

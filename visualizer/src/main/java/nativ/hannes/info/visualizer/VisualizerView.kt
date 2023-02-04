@@ -111,36 +111,36 @@ class VisualizerView @JvmOverloads constructor(context: Context?, attrs: Attribu
         invalidate()
     }
 
-    var mFlash = false
+    private var flash = false
 
     /**
      * Call this to make the visualizer flash. Useful for flashing at the start
      * of a song/loop etc...
      */
     fun flash() {
-        mFlash = true
+        flash = true
         invalidate()
     }
 
-    var mCanvasBitmap: Bitmap? = null
-    var mCanvas: Canvas? = null
+    var canvasBitmap: Bitmap? = null
+    var myCanvas: Canvas? = null
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         // Create canvas once we're ready to draw
         mRect[0, 0, width] = height
-        if (mCanvasBitmap == null) {
-            mCanvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        if (canvasBitmap == null) {
+            canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         }
-        if (mCanvas == null) {
-            mCanvas = Canvas(mCanvasBitmap!!)
+        if (myCanvas == null) {
+            myCanvas = Canvas(canvasBitmap!!)
         }
 
         bytes?.let {
             // Render all audio renderers
             audioData?.bytes = it
             for (renderer in renderers!!) {
-                renderer.render(mCanvas!!, audioData!!, mRect)
+                renderer.render(myCanvas!!, audioData!!, mRect)
             }
         }
 
@@ -148,17 +148,17 @@ class VisualizerView @JvmOverloads constructor(context: Context?, attrs: Attribu
             // Render all FFT renderers
             fftData?.bytes = it
             for (renderer in renderers!!) {
-                renderer.render(mCanvas!!, fftData!!, mRect)
+                renderer.render(myCanvas!!, fftData!!, mRect)
             }
         }
 
         // Fade out old contents
-        mCanvas!!.drawPaint(fadePaint)
-        if (mFlash) {
-            mFlash = false
-            mCanvas!!.drawPaint(flashPaint)
+        myCanvas!!.drawPaint(fadePaint)
+        if (flash) {
+            flash = false
+            myCanvas!!.drawPaint(flashPaint)
         }
-        canvas.drawBitmap(mCanvasBitmap!!, localMatrix, null)
+        canvas.drawBitmap(canvasBitmap!!, localMatrix, null)
     }
 
 }

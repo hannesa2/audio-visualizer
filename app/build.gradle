@@ -40,7 +40,6 @@ android {
         ignoreWarnings false
     }
     namespace 'info.hannes.visualizer'
-
 }
 
 dependencies {

@@ -5,14 +5,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
-
     defaultConfig {
         applicationId "info.hannes.visualizer"
         minSdkVersion 19
-        targetSdkVersion 33
+        compileSdk 34
+        targetSdkVersion 34
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
     }
 
     buildFeatures {

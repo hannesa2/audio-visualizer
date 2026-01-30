@@ -8,8 +8,8 @@ android {
     defaultConfig {
         applicationId "info.hannes.visualizer"
         minSdkVersion 21
-        compileSdk 35
-        targetSdkVersion 35
+        compileSdk 36
+        targetSdkVersion 36
         versionCode 1
         versionName "1.1"
     }

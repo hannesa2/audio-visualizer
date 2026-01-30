@@ -10,8 +10,7 @@ jobs:
       matrix:
         java_version: [ 17 ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Install JDK ${{ matrix.java_version }}
@@ -27,8 +26,7 @@ jobs:
     name: Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Install JDK 17
@@ -36,8 +34,9 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 17
+      - uses: gradle/actions/wrapper-validation@v5
       - name: Install Android SDK
-        uses: malinskiy/action-android/install-sdk@release/0.1.4
+        uses: hannesa2/action-android/install-sdk@0.1.16.7
       - name: Code checks
         run: ./gradlew check
       - name: Archive Lint report

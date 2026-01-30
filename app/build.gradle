@@ -1,10 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
 }
 
 android {
+    namespace 'info.hannes.visualizer'
     defaultConfig {
         applicationId "info.hannes.visualizer"
         minSdkVersion 21
@@ -31,14 +31,12 @@ android {
         }
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     lint {
         abortOnError true
         ignoreWarnings false
     }
-    namespace 'info.hannes.visualizer'
 }
 
 dependencies {

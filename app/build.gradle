@@ -6,7 +6,7 @@ android {
     namespace 'info.hannes.visualizer'
     defaultConfig {
         applicationId "info.hannes.visualizer"
-        minSdkVersion 21
+        minSdkVersion 23
         compileSdk 37
         targetSdkVersion 37
         versionCode 1
